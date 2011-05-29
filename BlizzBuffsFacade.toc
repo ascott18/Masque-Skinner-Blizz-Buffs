@@ -1,0 +1,9 @@
+## Interface: 40100
+## Title: BlizzBuffsFacade
+## Version: 4
+## Author: Cybeloras of Mal'Ganis
+## Notes: Skins the Blizzard buff and debuff frames with ButtonFacade
+## OptionalDeps: ButtonFacade, Masque
+## SavedVariablesPerCharacter: BlizzBuffsFacade
+
+BlizzBuffsFacade.lua
