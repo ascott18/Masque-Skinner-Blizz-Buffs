@@ -4,7 +4,6 @@ local LMB = LibMasque and LibMasque("Button")
 if not (LBF or LMB) then return end
 
 local f = CreateFrame("Frame")
-local addonName = ...
 local db
 
 local function SkinCallback(_, SkinID, Gloss, Backdrop, Group, _, Colors)
@@ -17,10 +16,10 @@ local function SkinCallback(_, SkinID, Gloss, Backdrop, Group, _, Colors)
 end
 	
 local function OnEvent(self, event, addon)
-	if addon ~= addonName then return end
 	
 	if not LMB then
 		BlizzBuffsFacade = BlizzBuffsFacade or {}
+		LBF:RegisterSkinCallback("Blizzard Buffs", SkinCallback)
 		db = BlizzBuffsFacade
 		
 		db.Buffs = db.Buffs or {}
@@ -58,23 +57,21 @@ local function OnEvent(self, event, addon)
 			LBF:Group("Blizzard Buffs", "TempEnchant"):AddButton(TempEnchant)
 		end
 	end
-		
-	LBF:RegisterSkinCallback("Blizzard Buffs", SkinCallback)
 	
 	f:SetScript("OnEvent", nil)
 end
 
 
-hooksecurefunc("CreateFrame", function (_, name) --dont need to do this for TempEnchant enchant frames because they are hard created in xml
-	if type(name) ~= "string" then return end
-	if strfind(name, "^DebuffButton") then
+hooksecurefunc("CreateFrame", function (_, name, parent) --dont need to do this for TempEnchant enchant frames because they are hard created in xml
+	if parent ~= BuffFrame or type(name) ~= "string" then return end
+	if strfind(name, "^DebuffButton%d+$") then
 		LBF:Group("Blizzard Buffs", "Debuffs"):AddButton(_G[name])
-	elseif strfind(name, "^BuffButton") then
+	elseif strfind(name, "^BuffButton%d+$") then
 		LBF:Group("Blizzard Buffs", "Buffs"):AddButton(_G[name])
 	end
 end
 )
 	
 f:SetScript("OnEvent", OnEvent)
-f:RegisterEvent("ADDON_LOADED")
+f:RegisterEvent("PLAYER_ENTERING_WORLD")
 
