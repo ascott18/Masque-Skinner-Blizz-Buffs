@@ -1,6 +1,6 @@
 ## Interface: 40200
 ## Title: BlizzBuffsFacade
-## Version: 4.2
+## Version: 4.2.1
 ## Author: Cybeloras of Mal'Ganis
 ## Notes: Skins the Blizzard buff and debuff frames with ButtonFacade
 ## OptionalDeps: ButtonFacade, Masque
