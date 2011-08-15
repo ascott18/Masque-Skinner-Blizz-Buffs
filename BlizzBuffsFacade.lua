@@ -1,6 +1,6 @@
 
 local LBF = LibStub("LibButtonFacade", true)
-local LMB = LibMasque and LibMasque("Button")
+local LMB =  LibStub("Masque", true) or (LibMasque and LibMasque("Button"))
 if not (LBF or LMB) then return end
 
 local f = CreateFrame("Frame")
