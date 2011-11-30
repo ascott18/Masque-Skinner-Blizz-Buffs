@@ -1,9 +1,8 @@
-## Interface: 40200
-## Title: Blizz Buffs Facade
-## Version: 4.2.2
+## Interface: 40300
+## Title: Masque Skinner: Blizz Buffs
+## Version: 4.3.0
 ## Author: Cybeloras of Mal'Ganis
-## Notes: Skins the Blizzard buff and debuff frames with ButtonFacade
-## OptionalDeps: ButtonFacade, Masque
-## SavedVariablesPerCharacter: BlizzBuffsFacade
+## Notes: Skins the Blizzard buff and debuff frames with Masque
+## OptionalDeps: Masque
 
 BlizzBuffsFacade.lua
