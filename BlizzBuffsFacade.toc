@@ -3,6 +3,6 @@
 ## Version: 4.3.0
 ## Author: Cybeloras of Mal'Ganis
 ## Notes: Skins the Blizzard buff and debuff frames with Masque
-## OptionalDeps: Masque
+## RequiredDeps: Masque
 
 BlizzBuffsFacade.lua
