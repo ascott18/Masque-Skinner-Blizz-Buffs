@@ -1,6 +1,6 @@
-## Interface: 60000
+## Interface: 70000
 ## Title: Masque Skinner: Blizz Buffs
-## Version: 5.1.0
+## Version: 7.0.3
 ## Author: Cybeloras of Detheroc/Mal'Ganis
 ## Notes: Skins the Blizzard buff and debuff frames with Masque
 ## RequiredDeps: Masque
