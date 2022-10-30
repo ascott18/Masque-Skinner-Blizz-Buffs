@@ -8,44 +8,57 @@ local Debuffs = LMB:Group("Blizzard Buffs", "Debuffs")
 if AuraButtonMixin then
 	-- Dragonflight+
 	local skinned = {}
+	local f = CreateFrame("Frame")
 
-	local function updateFrames(frames) 
-		for i = 1, #frames do
-			local frame = frames[i]
-			if not skinned[frame] then
-				skinned[frame] = 1
-				
-				-- We have to make a wrapper to hold the skinnable components of the Icon
-				-- because the aura frames are not square (and so if we skinned them directly
-				-- with Masque, they'd get all distorted and weird).
-				local skinWrapper = CreateFrame("Frame")
-				skinWrapper:SetParent(frame)
-				skinWrapper:SetSize(30, 30)
-				skinWrapper:SetPoint("TOP")
-				frame.Icon:SetParent(skinWrapper);
-				if frame.count then
-					-- edit mode versions don't have stack text
-					frame.count:SetParent(skinWrapper);
+	local function makeHook(group, container)
+		local function updateFrames(frames) 
+			for i = 1, #frames do
+				local frame = frames[i]
+				if not skinned[frame] then
+					skinned[frame] = 1
+					
+					-- We have to make a wrapper to hold the skinnable components of the Icon
+					-- because the aura frames are not square (and so if we skinned them directly
+					-- with Masque, they'd get all distorted and weird).
+					local skinWrapper = CreateFrame("Frame")
+					skinWrapper:SetParent(frame)
+					skinWrapper:SetSize(30, 30)
+					skinWrapper:SetPoint("TOP")
+
+					-- Blizzard's code constantly tries to reposition the icon,
+					-- so we have to make our own icon that it won't try to move.
+					frame.Icon:Hide()
+					frame.SkinnedIcon = skinWrapper:CreateTexture(nil, "BACKGROUND")
+					frame.SkinnedIcon:SetSize(30, 30)
+					frame.SkinnedIcon:SetPoint("CENTER")
+					frame.SkinnedIcon:SetTexture(frame.Icon:GetTexture())
+					hooksecurefunc(frame.Icon, "SetTexture", function(_, tex)
+						frame.SkinnedIcon:SetTexture(tex)
+					end)
+
+					if frame.count then
+						-- edit mode versions don't have stack text
+						frame.count:SetParent(skinWrapper);
+					end
+					if frame.Border then
+						-- only debuffs have borders
+						frame.Border:SetParent(skinWrapper);
+					end
+					if frame.symbol then
+						-- Shows debuff types as text in colorblind mode (except it currently doesnt work)
+						-- only debuffs have symbol
+						frame.symbol:SetParent(skinWrapper);
+					end
+					Buffs:AddButton(skinWrapper, {
+						Icon = frame.SkinnedIcon, 
+						Border = frame.Border,
+						Count = frame.count,
+						HotKey = frame.symbol
+					})
 				end
-				if frame.Border then
-					-- only debuffs have borders
-					frame.Border:SetParent(skinWrapper);
-				end
-				if frame.symbol then
-					-- Shows debuff types as text in colorblind mode (except it currently doesnt work)
-					-- only debuffs have symbol
-					frame.symbol:SetParent(skinWrapper);
-				end
-				Buffs:AddButton(skinWrapper, {
-					Icon = frame.Icon, 
-					Border = frame.Border,
-					Count = frame.count,
-					HotKey = frame.symbol
-				})
 			end
 		end
-	end
-	local function makeHook(group)
+		
 		return function(self)
 			updateFrames(self.auraFrames, group)
 			if self.exampleAuraFrames then
@@ -53,10 +66,10 @@ if AuraButtonMixin then
 			end
 		end
 	end
-	hooksecurefunc(BuffFrame, "UpdateAuraButtons", makeHook(Buffs))
-	hooksecurefunc(BuffFrame, "OnEditModeEnter", makeHook(Buffs))
-	hooksecurefunc(DebuffFrame, "UpdateAuraButtons", makeHook(Debuffs))
-	hooksecurefunc(DebuffFrame, "OnEditModeEnter", makeHook(Debuffs))
+	hooksecurefunc(BuffFrame, "UpdateAuraButtons", makeHook(Buffs, BuffFrame))
+	hooksecurefunc(BuffFrame, "OnEditModeEnter", makeHook(Buffs, BuffFrame))
+	hooksecurefunc(DebuffFrame, "UpdateAuraButtons", makeHook(Debuffs, DebuffFrame))
+	hooksecurefunc(DebuffFrame, "OnEditModeEnter", makeHook(Debuffs, DebuffFrame))
 else
 	local f = CreateFrame("Frame")
 	local TempEnchant = LMB:Group("Blizzard Buffs", "TempEnchant")
