@@ -53,7 +53,7 @@ if AuraButtonMixin then
 						Border = frame.Border,
 						Count = frame.count,
 						HotKey = frame.symbol
-					})
+					}, "Aura")
 				end
 			end
 		end
@@ -81,7 +81,7 @@ else
 		for i=1, BUFF_MAX_DISPLAY do
 			local buff = _G["BuffButton"..i]
 			if buff then
-				Buffs:AddButton(buff)
+				Buffs:AddButton(buff, nil, "Buff")
 			end
 			if not buff then break end
 		end
@@ -89,7 +89,7 @@ else
 		for i=1, BUFF_MAX_DISPLAY do
 			local debuff = _G["DebuffButton"..i]
 			if debuff then
-				Debuffs:AddButton(debuff)
+				Debuffs:AddButton(debuff, nil, "Debuff")
 			end
 			if not debuff then break end
 		end
@@ -98,7 +98,7 @@ else
 			local f = _G["TempEnchant"..i]
 			--_G["TempEnchant"..i.."Border"].SetTexture = NULL
 			if TempEnchant then
-				TempEnchant:AddButton(f)
+				TempEnchant:AddButton(f, nil, "Enchant")
 			end
 			_G["TempEnchant"..i.."Border"]:SetVertexColor(.75, 0, 1)
 		end
@@ -109,10 +109,10 @@ else
 	hooksecurefunc("CreateFrame", function (_, name, parent) --dont need to do this for TempEnchant enchant frames because they are hard created in xml
 		if parent ~= BuffFrame or type(name) ~= "string" then return end
 		if strfind(name, "^DebuffButton%d+$") then
-			Debuffs:AddButton(_G[name])
+			Debuffs:AddButton(_G[name], nil, "Debuff")
 			Debuffs:ReSkin() -- Needed to prevent issues with stack text appearing under the frame.
 		elseif strfind(name, "^BuffButton%d+$") then
-			Buffs:AddButton(_G[name])
+			Buffs:AddButton(_G[name], nil, "Buff")
 			Buffs:ReSkin() -- Needed to prevent issues with stack text appearing under the frame.
 		end
 	end
