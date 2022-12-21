@@ -8,7 +8,6 @@ local Debuffs = LMB:Group("Blizzard Buffs", "Debuffs")
 if AuraButtonMixin then
 	-- Dragonflight+
 	local skinned = {}
-	local f = CreateFrame("Frame")
 
 	local function makeHook(group, container)
 		local function updateFrames(frames)
