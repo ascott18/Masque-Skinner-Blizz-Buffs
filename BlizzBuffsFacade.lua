@@ -1,5 +1,5 @@
 
-local LMB = LibStub("Masque", true) or (LibMasque and LibMasque("Button"))
+local LMB = LibStub("Masque", true)
 if not LMB then return end
 
 local Buffs = LMB:Group("Blizzard Buffs", "Buffs")
