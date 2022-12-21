@@ -11,12 +11,12 @@ if AuraButtonMixin then
 	local f = CreateFrame("Frame")
 
 	local function makeHook(group, container)
-		local function updateFrames(frames) 
+		local function updateFrames(frames)
 			for i = 1, #frames do
 				local frame = frames[i]
 				if not skinned[frame] then
 					skinned[frame] = 1
-					
+
 					-- We have to make a wrapper to hold the skinnable components of the Icon
 					-- because the aura frames are not square (and so if we skinned them directly
 					-- with Masque, they'd get all distorted and weird).
@@ -41,7 +41,7 @@ if AuraButtonMixin then
 						frame.count:SetParent(skinWrapper);
 					end
 					if frame.Border then
-						-- only debuffs have borders
+						-- only debuffs and enchants have borders
 						frame.Border:SetParent(skinWrapper);
 					end
 					if frame.symbol then
@@ -50,7 +50,7 @@ if AuraButtonMixin then
 						frame.symbol:SetParent(skinWrapper);
 					end
 					group:AddButton(skinWrapper, {
-						Icon = frame.SkinnedIcon, 
+						Icon = frame.SkinnedIcon,
 						Border = frame.Border,
 						Count = frame.count,
 						HotKey = frame.symbol
@@ -58,7 +58,7 @@ if AuraButtonMixin then
 				end
 			end
 		end
-		
+
 		return function(self)
 			updateFrames(self.auraFrames, group)
 			if self.exampleAuraFrames then
@@ -66,6 +66,7 @@ if AuraButtonMixin then
 			end
 		end
 	end
+
 	hooksecurefunc(BuffFrame, "UpdateAuraButtons", makeHook(Buffs, BuffFrame))
 	hooksecurefunc(BuffFrame, "OnEditModeEnter", makeHook(Buffs, BuffFrame))
 	hooksecurefunc(DebuffFrame, "UpdateAuraButtons", makeHook(Debuffs, DebuffFrame))
@@ -85,7 +86,7 @@ else
 			end
 			if not buff then break end
 		end
-		
+
 		for i=1, BUFF_MAX_DISPLAY do
 			local debuff = _G["DebuffButton"..i]
 			if debuff then
@@ -93,7 +94,7 @@ else
 			end
 			if not debuff then break end
 		end
-		
+
 		for i=1, (NUM_TEMP_ENCHANT_FRAMES or 3) do
 			local f = _G["TempEnchant"..i]
 			--_G["TempEnchant"..i.."Border"].SetTexture = NULL
@@ -102,10 +103,9 @@ else
 			end
 			_G["TempEnchant"..i.."Border"]:SetVertexColor(.75, 0, 1)
 		end
-		
+
 		f:SetScript("OnEvent", nil)
 	end
-
 
 	hooksecurefunc("CreateFrame", function (_, name, parent) --dont need to do this for TempEnchant enchant frames because they are hard created in xml
 		if parent ~= BuffFrame or type(name) ~= "string" then return end
@@ -118,8 +118,7 @@ else
 		end
 	end
 	)
-		
+
 	f:SetScript("OnEvent", OnEvent)
 	f:RegisterEvent("PLAYER_ENTERING_WORLD")
-
 end
