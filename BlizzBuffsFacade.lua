@@ -35,25 +35,35 @@ if AuraButtonMixin then
 						frame.SkinnedIcon:SetTexture(tex)
 					end)
 
-					if frame.count then
+					if frame.Count then
 						-- edit mode versions don't have stack text
-						frame.count:SetParent(skinWrapper);
+						frame.Count:SetParent(skinWrapper);
 					end
-					if frame.Border then
-						-- only debuffs and enchants have borders
-						frame.Border:SetParent(skinWrapper);
+					if frame.DebuffBorder then
+						frame.DebuffBorder:SetParent(skinWrapper);
 					end
-					if frame.symbol then
+					if frame.TempEnchantBorder then
+						frame.TempEnchantBorder:SetParent(skinWrapper);
+						frame.TempEnchantBorder:SetVertexColor(.75, 0, 1)
+					end
+					if frame.Symbol then
 						-- Shows debuff types as text in colorblind mode (except it currently doesnt work)
-						-- only debuffs have symbol
-						frame.symbol:SetParent(skinWrapper);
+						frame.Symbol:SetParent(skinWrapper);
 					end
+
+					local bType = frame.auraType or "Aura"
+
+					if bType == "DeadlyDebuff" then
+						bType = "Debuff"
+					end
+
 					group:AddButton(skinWrapper, {
 						Icon = frame.SkinnedIcon,
-						Border = frame.Border,
-						Count = frame.count,
-						HotKey = frame.symbol
-					}, "Aura")
+						DebuffBorder = frame.DebuffBorder,
+						EnchantBorder = frame.TempEnchantBorder,
+						Count = frame.Count,
+						HotKey = frame.Symbol
+					}, bType)
 				end
 			end
 		end
