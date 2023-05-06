@@ -13,7 +13,7 @@ if AuraButtonMixin then
 		local function updateFrames(frames)
 			for i = 1, #frames do
 				local frame = frames[i]
-				if not skinned[frame] then
+				if not skinned[frame] and frame.Icon.GetTexture then
 					skinned[frame] = 1
 
 					-- We have to make a wrapper to hold the skinnable components of the Icon
