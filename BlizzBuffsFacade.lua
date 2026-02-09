@@ -4,6 +4,8 @@ if not LMB then return end
 
 local Buffs = LMB:Group("Blizzard Buffs", "Buffs")
 local Debuffs = LMB:Group("Blizzard Buffs", "Debuffs")
+local TargetBuffs = LMB:Group("Blizzard Buffs", "Target Buffs")
+local TargetDebuffs = LMB:Group("Blizzard Buffs", "Target Debuffs")
 
 if AuraButtonMixin then
 	-- Dragonflight+
@@ -97,6 +99,44 @@ if AuraButtonMixin then
 	hooksecurefunc(BuffFrame, "OnEditModeEnter", makeHook(Buffs, BuffFrame))
 	hooksecurefunc(DebuffFrame, "UpdateAuraButtons", makeHook(Debuffs, DebuffFrame))
 	hooksecurefunc(DebuffFrame, "OnEditModeEnter", makeHook(Debuffs, DebuffFrame))
+
+	-- Target frame buffs/debuffs (uses auraPools with TargetBuffFrameTemplate/TargetDebuffFrameTemplate)
+	local targetSkinned = {}
+	local function skinTargetAuraFrame(frame, group, auraType)
+		if targetSkinned[frame] then return end
+		targetSkinned[frame] = true
+
+		group:AddButton(frame, {
+			Icon = frame.Icon,
+			Border = frame.Border,
+			Count = frame.Count,
+			Cooldown = frame.Cooldown,
+		}, auraType)
+	end
+
+	local function hookTargetFrameAuras(targetFrame)
+		hooksecurefunc(targetFrame, "UpdateAuras", function(self)
+			if not self.auraPools then return end
+
+			local buffPool = self.auraPools:GetPool("TargetBuffFrameTemplate")
+			local debuffPool = self.auraPools:GetPool("TargetDebuffFrameTemplate")
+
+			if buffPool then
+				for frame in buffPool:EnumerateActive() do
+					skinTargetAuraFrame(frame, TargetBuffs, "Buff")
+				end
+			end
+
+			if debuffPool then
+				for frame in debuffPool:EnumerateActive() do
+					skinTargetAuraFrame(frame, TargetDebuffs, "Debuff")
+				end
+			end
+		end)
+	end
+
+	hookTargetFrameAuras(TargetFrame)
+	hookTargetFrameAuras(FocusFrame)
 else
 	local f = CreateFrame("Frame")
 	local TempEnchant = LMB:Group("Blizzard Buffs", "TempEnchant")
