@@ -41,6 +41,23 @@ if AuraButtonMixin then
 					end
 					if frame.DebuffBorder then
 						frame.DebuffBorder:SetParent(skinWrapper);
+						if AuraUtil.SetAuraBorderAtlas then
+							-- WoW Midnight+ - convert atlas that can't be skinned into vertex color
+							local texture
+							hooksecurefunc(frame.DebuffBorder, "SetAtlas", function(self, atlas)
+								for type, info in pairs(AuraUtil.GetDebuffDisplayInfoTable()) do
+									if atlas == info.dispelAtlas or atlas == info.basicAtlas then
+										self:SetVertexColor(info.color:GetRGB())
+										self:SetTexture(texture)
+										break
+									end
+								end
+							end)
+							hooksecurefunc(frame.DebuffBorder, "SetTexture", function(self, tex)
+								-- Capture the texture that gets set by masque so we can override it after the atlas gets set
+								texture	= tex
+							end)
+						end
 					end
 					if frame.TempEnchantBorder then
 						frame.TempEnchantBorder:SetParent(skinWrapper);
