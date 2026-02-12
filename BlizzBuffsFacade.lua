@@ -60,7 +60,7 @@ if AuraButtonMixin then
 
 									if debuffInfo and debuffInfo.color then
 										self:SetVertexColor(debuffInfo.color:GetRGB())
-										self:SetTexture(texture)
+										if texture then self:SetTexture(texture) end
 									end
 								end)
 								hooksecurefunc(frame.DebuffBorder, "SetTexture", function(self, tex)
