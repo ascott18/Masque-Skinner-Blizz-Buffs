@@ -48,12 +48,19 @@ if AuraButtonMixin then
 								-- WoW Midnight+ - convert atlas that can't be skinned into vertex color
 								local texture
 								hooksecurefunc(frame.DebuffBorder, "SetAtlas", function(self, atlas)
-									for type, info in pairs(AuraUtil.GetDebuffDisplayInfoTable()) do
-										if atlas == info.dispelAtlas or atlas == info.basicAtlas then
-											self:SetVertexColor(info.color:GetRGB())
-											self:SetTexture(texture)
-											break
-										end
+									-- The 'atlas' argument is tainted and cannot be used in comparisons.
+									-- We can get the aura type from the aura frame itself.
+									local skinWrapper = self:GetParent()
+									if not skinWrapper then return end
+									
+									local auraFrame = skinWrapper:GetParent()
+									if not auraFrame or not auraFrame.auraType then return end
+
+									local debuffInfo = AuraUtil.GetDebuffDisplayInfoTable()[auraFrame.auraType]
+
+									if debuffInfo and debuffInfo.color then
+										self:SetVertexColor(debuffInfo.color:GetRGB())
+										self:SetTexture(texture)
 									end
 								end)
 								hooksecurefunc(frame.DebuffBorder, "SetTexture", function(self, tex)
