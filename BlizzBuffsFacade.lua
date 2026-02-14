@@ -76,8 +76,7 @@ if AuraButtonMixin then
 										for type, info in pairs(AuraUtil.GetDebuffDisplayInfoTable()) do
 											if atlas == info.dispelAtlas or atlas == info.basicAtlas then
 												self:SetVertexColor(info.color:GetRGB())
-												self:SetTexture(texture)
-												break
+												return
 											end
 										end
 									end
